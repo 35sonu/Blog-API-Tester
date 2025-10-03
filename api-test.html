@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NestJS Blog API Tester</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button.danger {
+            background-color: #dc3545;
+        }
+        button.danger:hover {
+            background-color: #c82333;
+        }
+        .response {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .token-display {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 NestJS Blog API Tester</h1>
+    
+    <!-- Server Status -->
+    <div class="container">
+        <h2>Server Status</h2>
+        <button onclick="checkServerStatus()">Check Server Status</button>
+        <div id="serverStatus" class="response"></div>
+    </div>
+
+    <!-- Authentication Section -->
+    <div class="grid">
+        <div class="container">
+            <h2>🔐 User Registration (Signup)</h2>
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="signupUsername" placeholder="john_doe" value="john_doe">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="signupEmail" placeholder="john@example.com" value="john@example.com">
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="signupPassword" placeholder="securepass123" value="securepass123">
+            </div>
+            <button onclick="signup()">Sign Up</button>
+            <div id="signupResponse" class="response"></div>
+        </div>
+
+        <div class="container">
+            <h2>🔑 User Login (Signin)</h2>
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" id="signinUsername" placeholder="john_doe" value="john_doe">
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" id="signinPassword" placeholder="securepass123" value="securepass123">
+            </div>
+            <button onclick="signin()">Sign In</button>
+            <div id="signinResponse" class="response"></div>
+        </div>
+    </div>
+
+    <!-- Token Display -->
+    <div class="container">
+        <h2>🎫 Access Token</h2>
+        <div id="tokenDisplay" class="token-display">No token yet. Please login first.</div>
+    </div>
+
+    <!-- Posts Section -->
+    <div class="container">
+        <h2>📝 Blog Posts Management</h2>
+        
+        <div class="grid">
+            <div>
+                <h3>Create New Post</h3>
+                <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" id="postTitle" placeholder="My Awesome Post" value="My Test Post">
+                </div>
+                <div class="form-group">
+                    <label>Content:</label>
+                    <textarea id="postContent" rows="4" placeholder="Write your post content here...">This is a test post created from the browser!</textarea>
+                </div>
+                <button onclick="createPost()">Create Post</button>
+                <div id="createPostResponse" class="response"></div>
+            </div>
+
+            <div>
+                <h3>Get Posts</h3>
+                <button onclick="getAllPosts()">Get All Posts</button>
+                <button onclick="getMyPosts()">Get My Posts</button>
+                <div class="form-group">
+                    <label>Post ID for specific post:</label>
+                    <input type="number" id="getPostId" placeholder="1" value="1">
+                    <button onclick="getPostById()">Get Post by ID</button>
+                </div>
+                <div id="getPostsResponse" class="response"></div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <h3>Update Post</h3>
+                <div class="form-group">
+                    <label>Post ID to Update:</label>
+                    <input type="number" id="updatePostId" placeholder="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label>New Title:</label>
+                    <input type="text" id="updateTitle" placeholder="Updated Title" value="Updated Post Title">
+                </div>
+                <div class="form-group">
+                    <label>New Content:</label>
+                    <textarea id="updateContent" rows="3" placeholder="Updated content...">This post has been updated from the browser!</textarea>
+                </div>
+                <button onclick="updatePost()">Update Post</button>
+                <div id="updatePostResponse" class="response"></div>
+            </div>
+
+            <div>
+                <h3>Delete Post</h3>
+                <div class="form-group">
+                    <label>Post ID to Delete:</label>
+                    <input type="number" id="deletePostId" placeholder="1" value="1">
+                </div>
+                <button class="danger" onclick="deletePost()">Delete Post</button>
+                <div id="deletePostResponse" class="response"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let accessToken = '';
+        const API_BASE = 'http://localhost:3000';
+
+        // Utility function to make API requests
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': accessToken ? `Bearer ${accessToken}` : '',
+                        ...options.headers
+                    },
+                    ...options
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${data.message || 'Unknown error'}`);
+                }
+                
+                return { success: true, data };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Display response in UI
+        function displayResponse(elementId, response, isError = false) {
+            const element = document.getElementById(elementId);
+            element.className = `response ${isError ? 'error' : 'success'}`;
+            element.textContent = JSON.stringify(response, null, 2);
+        }
+
+        // Update token display
+        function updateTokenDisplay(token) {
+            accessToken = token;
+            document.getElementById('tokenDisplay').textContent = token ? 
+                `Token: ${token.substring(0, 50)}...` : 'No token yet. Please login first.';
+        }
+
+        // Check server status
+        async function checkServerStatus() {
+            const result = await makeRequest(`${API_BASE}/`);
+            displayResponse('serverStatus', result.success ? result.data : result.error, !result.success);
+        }
+
+        // Authentication functions
+        async function signup() {
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            const result = await makeRequest(`${API_BASE}/auth/signup`, {
+                method: 'POST',
+                body: JSON.stringify({ username, email, password })
+            });
+
+            displayResponse('signupResponse', result.success ? result.data : result.error, !result.success);
+            
+            if (result.success && result.data.access_token) {
+                updateTokenDisplay(result.data.access_token);
+            }
+        }
+
+        async function signin() {
+            const username = document.getElementById('signinUsername').value;
+            const password = document.getElementById('signinPassword').value;
+
+            const result = await makeRequest(`${API_BASE}/auth/signin`, {
+                method: 'POST',
+                body: JSON.stringify({ username, password })
+            });
+
+            displayResponse('signinResponse', result.success ? result.data : result.error, !result.success);
+            
+            if (result.success && result.data.access_token) {
+                updateTokenDisplay(result.data.access_token);
+            }
+        }
+
+        // Posts functions
+        async function createPost() {
+            if (!accessToken) {
+                displayResponse('createPostResponse', 'Please login first to create a post', true);
+                return;
+            }
+
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+
+            const result = await makeRequest(`${API_BASE}/posts`, {
+                method: 'POST',
+                body: JSON.stringify({ title, content })
+            });
+
+            displayResponse('createPostResponse', result.success ? result.data : result.error, !result.success);
+        }
+
+        async function getAllPosts() {
+            if (!accessToken) {
+                displayResponse('getPostsResponse', 'Please login first to view posts', true);
+                return;
+            }
+
+            const result = await makeRequest(`${API_BASE}/posts`);
+            displayResponse('getPostsResponse', result.success ? result.data : result.error, !result.success);
+        }
+
+        async function getMyPosts() {
+            if (!accessToken) {
+                displayResponse('getPostsResponse', 'Please login first to view your posts', true);
+                return;
+            }
+
+            const result = await makeRequest(`${API_BASE}/posts/my-posts`);
+            displayResponse('getPostsResponse', result.success ? result.data : result.error, !result.success);
+        }
+
+        async function getPostById() {
+            if (!accessToken) {
+                displayResponse('getPostsResponse', 'Please login first to view posts', true);
+                return;
+            }
+
+            const postId = document.getElementById('getPostId').value;
+            const result = await makeRequest(`${API_BASE}/posts/${postId}`);
+            displayResponse('getPostsResponse', result.success ? result.data : result.error, !result.success);
+        }
+
+        async function updatePost() {
+            if (!accessToken) {
+                displayResponse('updatePostResponse', 'Please login first to update posts', true);
+                return;
+            }
+
+            const postId = document.getElementById('updatePostId').value;
+            const title = document.getElementById('updateTitle').value;
+            const content = document.getElementById('updateContent').value;
+
+            const result = await makeRequest(`${API_BASE}/posts/${postId}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ title, content })
+            });
+
+            displayResponse('updatePostResponse', result.success ? result.data : result.error, !result.success);
+        }
+
+        async function deletePost() {
+            if (!accessToken) {
+                displayResponse('deletePostResponse', 'Please login first to delete posts', true);
+                return;
+            }
+
+            const postId = document.getElementById('deletePostId').value;
+            
+            if (!confirm(`Are you sure you want to delete post ${postId}?`)) {
+                return;
+            }
+
+            const result = await makeRequest(`${API_BASE}/posts/${postId}`, {
+                method: 'DELETE'
+            });
+
+            displayResponse('deletePostResponse', 
+                result.success ? 'Post deleted successfully' : result.error, 
+                !result.success
+            );
+        }
+
+        // Check server status on page load
+        window.onload = function() {
+            checkServerStatus();
+        };
+    </script>
+</body>
+</html>
