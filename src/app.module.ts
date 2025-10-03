@@ -38,7 +38,7 @@ import { PostModule } from './post/post.module';
           password: configService.get('DATABASE_PASSWORD'),
           database: configService.get('DATABASE_NAME'),
           entities: [User, Post],
-          synchronize: true, // Set to false in production
+          synchronize: true,
         };
       },
     }),

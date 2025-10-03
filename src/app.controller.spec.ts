@@ -17,10 +17,9 @@ describe('AppController', () => {
   describe('root', () => {
     it('should return API information', () => {
       const result = appController.getHello();
-      expect(result).toHaveProperty('message', '🚀 NestJS PostgreSQL API');
+      expect(result).toHaveProperty('name', 'Blog API');
       expect(result).toHaveProperty('version', '1.0.0');
-      expect(result).toHaveProperty('status', 'Running');
-      expect(result).toHaveProperty('endpoints');
+      expect(result).toHaveProperty('status', 'running');
     });
   });
 });

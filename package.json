@@ -1,7 +1,7 @@
 {
-  "name": "nestjs-postgres-api",
-  "version": "0.0.1",
-  "description": "",
+  "name": "blog-api",
+  "version": "1.0.0",
+  "description": "REST API for blogging platform",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
