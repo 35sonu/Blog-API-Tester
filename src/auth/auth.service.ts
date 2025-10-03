@@ -10,8 +10,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(username: string, email: string, pass: string): Promise<{ access_token: string, user: { id: number, username: string, email: string } }> {
-    // Check if user already exists
+  async signUp(username: string, email: string, password: string): Promise<{ access_token: string, user: { id: number, username: string, email: string } }> {
     const existingUser = await this.userService.findByUsername(username);
     if (existingUser) {
       throw new ConflictException('Username already exists');
@@ -22,7 +21,7 @@ export class AuthService {
       throw new ConflictException('Email already exists');
     }
 
-    const hashedPassword = await bcrypt.hash(pass, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.userService.create({ username, email, password: hashedPassword });
     const payload = { sub: user.id, username: user.username, email: user.email };
     return {
@@ -33,10 +32,10 @@ export class AuthService {
 
   async signIn(
     username: string,
-    pass: string,
+    password: string,
   ): Promise<{ access_token: string, user: { id: number, username: string, email: string } }> {
     const user = await this.userService.findByUsername(username);
-    if (!user || !await bcrypt.compare(pass, user.password)) {
+    if (!user || !await bcrypt.compare(password, user.password)) {
       throw new UnauthorizedException('Invalid credentials');
     }
     const payload = { sub: user.id, username: user.username, email: user.email };
