@@ -18,16 +18,29 @@ import { PostModule } from './post/post.module';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DATABASE_HOST'),
-        port: configService.get('DATABASE_PORT'),
-        username: configService.get('DATABASE_USERNAME'),
-        password: configService.get('DATABASE_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
-        entities: [User, Post],
-        synchronize: true, // Set to false in production
-      }),
+      useFactory: (configService: ConfigService) => {
+        const dbType = configService.get('DATABASE_TYPE') || 'postgres';
+        
+        if (dbType === 'sqlite') {
+          return {
+            type: 'sqlite',
+            database: configService.get('DATABASE_NAME') || 'database.sqlite',
+            entities: [User, Post],
+            synchronize: true,
+          };
+        }
+        
+        return {
+          type: 'postgres',
+          host: configService.get('DATABASE_HOST'),
+          port: configService.get('DATABASE_PORT'),
+          username: configService.get('DATABASE_USERNAME'),
+          password: configService.get('DATABASE_PASSWORD'),
+          database: configService.get('DATABASE_NAME'),
+          entities: [User, Post],
+          synchronize: true, // Set to false in production
+        };
+      },
     }),
     AuthModule,
     UserModule,

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NestJS API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .endpoint { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .response { margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 3px; font-family: monospace; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 3px; }
+        .success { color: green; }
+        .error { color: red; }
+        .token-display { background: #e9ecef; padding: 10px; border-radius: 5px; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 NestJS PostgreSQL API Test</h1>
+        <p>Server running at: <strong>http://localhost:3000</strong></p>
+        
+        <div class="endpoint">
+            <h3>1. Register User</h3>
+            <input type="text" id="signupUsername" placeholder="Username" value="testuser">
+            <input type="email" id="signupEmail" placeholder="Email" value="test@example.com">
+            <input type="password" id="signupPassword" placeholder="Password" value="password123">
+            <button onclick="signup()">Sign Up</button>
+            <div id="signupResponse" class="response"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>2. Login User</h3>
+            <input type="text" id="signinUsername" placeholder="Username" value="testuser">
+            <input type="password" id="signinPassword" placeholder="Password" value="password123">
+            <button onclick="signin()">Sign In</button>
+            <div id="signinResponse" class="response"></div>
+            <div id="tokenDisplay" class="token-display" style="display: none;">
+                <strong>JWT Token:</strong> <span id="jwtToken"></span>
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <h3>3. Create Post (Requires Login)</h3>
+            <input type="text" id="postTitle" placeholder="Post Title" value="My First Post">
+            <textarea id="postContent" placeholder="Post Content" rows="3">This is the content of my first post!</textarea>
+            <button onclick="createPost()">Create Post</button>
+            <div id="createPostResponse" class="response"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>4. Get All Posts (Requires Login)</h3>
+            <button onclick="getAllPosts()">Get All Posts</button>
+            <div id="getAllPostsResponse" class="response"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>5. Get My Posts (Requires Login)</h3>
+            <button onclick="getMyPosts()">Get My Posts</button>
+            <div id="getMyPostsResponse" class="response"></div>
+        </div>
+    </div>
+
+    <script>
+        let jwtToken = '';
+
+        async function makeRequest(url, method, data = null, requiresAuth = false) {
+            const options = {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+
+            if (requiresAuth && jwtToken) {
+                options.headers['Authorization'] = `Bearer ${jwtToken}`;
+            }
+
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+                return { success: response.ok, data: result, status: response.status };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function signup() {
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            const result = await makeRequest('http://localhost:3000/auth/signup', 'POST', {
+                username, email, password
+            });
+
+            const responseDiv = document.getElementById('signupResponse');
+            if (result.success) {
+                responseDiv.innerHTML = `<div class="success">✅ Success: ${JSON.stringify(result.data, null, 2)}</div>`;
+                if (result.data.access_token) {
+                    jwtToken = result.data.access_token;
+                    document.getElementById('jwtToken').textContent = jwtToken;
+                    document.getElementById('tokenDisplay').style.display = 'block';
+                }
+            } else {
+                responseDiv.innerHTML = `<div class="error">❌ Error: ${JSON.stringify(result.data || result.error, null, 2)}</div>`;
+            }
+        }
+
+        async function signin() {
+            const username = document.getElementById('signinUsername').value;
+            const password = document.getElementById('signinPassword').value;
+
+            const result = await makeRequest('http://localhost:3000/auth/signin', 'POST', {
+                username, password
+            });
+
+            const responseDiv = document.getElementById('signinResponse');
+            if (result.success) {
+                responseDiv.innerHTML = `<div class="success">✅ Success: ${JSON.stringify(result.data, null, 2)}</div>`;
+                if (result.data.access_token) {
+                    jwtToken = result.data.access_token;
+                    document.getElementById('jwtToken').textContent = jwtToken;
+                    document.getElementById('tokenDisplay').style.display = 'block';
+                }
+            } else {
+                responseDiv.innerHTML = `<div class="error">❌ Error: ${JSON.stringify(result.data || result.error, null, 2)}</div>`;
+            }
+        }
+
+        async function createPost() {
+            const title = document.getElementById('postTitle').value;
+            const content = document.getElementById('postContent').value;
+
+            if (!jwtToken) {
+                document.getElementById('createPostResponse').innerHTML = '<div class="error">❌ Please login first!</div>';
+                return;
+            }
+
+            const result = await makeRequest('http://localhost:3000/posts', 'POST', {
+                title, content
+            }, true);
+
+            const responseDiv = document.getElementById('createPostResponse');
+            if (result.success) {
+                responseDiv.innerHTML = `<div class="success">✅ Success: ${JSON.stringify(result.data, null, 2)}</div>`;
+            } else {
+                responseDiv.innerHTML = `<div class="error">❌ Error: ${JSON.stringify(result.data || result.error, null, 2)}</div>`;
+            }
+        }
+
+        async function getAllPosts() {
+            if (!jwtToken) {
+                document.getElementById('getAllPostsResponse').innerHTML = '<div class="error">❌ Please login first!</div>';
+                return;
+            }
+
+            const result = await makeRequest('http://localhost:3000/posts', 'GET', null, true);
+
+            const responseDiv = document.getElementById('getAllPostsResponse');
+            if (result.success) {
+                responseDiv.innerHTML = `<div class="success">✅ Success: ${JSON.stringify(result.data, null, 2)}</div>`;
+            } else {
+                responseDiv.innerHTML = `<div class="error">❌ Error: ${JSON.stringify(result.data || result.error, null, 2)}</div>`;
+            }
+        }
+
+        async function getMyPosts() {
+            if (!jwtToken) {
+                document.getElementById('getMyPostsResponse').innerHTML = '<div class="error">❌ Please login first!</div>';
+                return;
+            }
+
+            const result = await makeRequest('http://localhost:3000/posts/my-posts', 'GET', null, true);
+
+            const responseDiv = document.getElementById('getMyPostsResponse');
+            if (result.success) {
+                responseDiv.innerHTML = `<div class="success">✅ Success: ${JSON.stringify(result.data, null, 2)}</div>`;
+            } else {
+                responseDiv.innerHTML = `<div class="error">❌ Error: ${JSON.stringify(result.data || result.error, null, 2)}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
