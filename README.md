@@ -1,98 +1,363 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS PostgreSQL API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust REST API built with NestJS, PostgreSQL, TypeORM, and JWT authentication. This project provides a complete backend solution with user authentication, CRUD operations, and comprehensive testing.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- 🔐 **JWT Authentication**: Secure user registration and login
+- 🗃️ **PostgreSQL Database**: Reliable data persistence with TypeORM
+- 📝 **CRUD Operations**: Complete Create, Read, Update, Delete functionality for posts
+- ✅ **Input Validation**: Comprehensive request validation using class-validator
+- 🛡️ **Error Handling**: Global exception filters with detailed error responses
+- 🧪 **Unit Testing**: Comprehensive test coverage using Jest
+- 📱 **RESTful API**: Well-structured REST endpoints
+- 🏗️ **Clean Architecture**: Modular design with separation of concerns
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- **Framework**: NestJS
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT (JSON Web Tokens)
+- **Validation**: class-validator & class-transformer
+- **Testing**: Jest
+- **Language**: TypeScript
 
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- PostgreSQL (v12 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-$ npm install
+git clone <repository-url>
+cd nestjs-postgres-api
 ```
 
-## Compile and run the project
-
+2. Install dependencies:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+3. Set up environment variables:
+Create a `.env` file in the root directory with the following variables:
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=postgres
+DATABASE_NAME=postgres
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_EXPIRES_IN=24h
+PORT=3000
 ```
 
-## Deployment
+4. Start PostgreSQL and ensure the database exists
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+5. Run the application:
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Development
+npm run start:dev
+
+# Production
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+The API will be available at `http://localhost:3000`
 
-## Resources
+## API Documentation
 
-Check out a few resources that may come in handy when working with NestJS:
+### Authentication
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+#### Register User
+```http
+POST /auth/signup
+Content-Type: application/json
 
-## Support
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "johndoe",
+    "email": "john@example.com"
+  }
+}
+```
 
-## Stay in touch
+#### Login User
+```http
+POST /auth/signin
+Content-Type: application/json
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+{
+  "username": "johndoe",
+  "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "johndoe",
+    "email": "john@example.com"
+  }
+}
+```
+
+### Posts (Protected Routes)
+
+All post endpoints require authentication. Include the JWT token in the Authorization header:
+```
+Authorization: Bearer <your-jwt-token>
+```
+
+#### Create Post
+```http
+POST /posts
+Content-Type: application/json
+Authorization: Bearer <your-jwt-token>
+
+{
+  "title": "My First Post",
+  "content": "This is the content of my first post."
+}
+```
+
+#### Get All Posts
+```http
+GET /posts
+Authorization: Bearer <your-jwt-token>
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "title": "My First Post",
+    "content": "This is the content of my first post.",
+    "authorId": 1,
+    "author": {
+      "id": 1,
+      "username": "johndoe",
+      "email": "john@example.com"
+    },
+    "createdAt": "2025-01-03T17:30:00.000Z",
+    "updatedAt": "2025-01-03T17:30:00.000Z"
+  }
+]
+```
+
+#### Get My Posts
+```http
+GET /posts/my-posts
+Authorization: Bearer <your-jwt-token>
+```
+
+#### Get Single Post
+```http
+GET /posts/:id
+Authorization: Bearer <your-jwt-token>
+```
+
+#### Update Post
+```http
+PATCH /posts/:id
+Content-Type: application/json
+Authorization: Bearer <your-jwt-token>
+
+{
+  "title": "Updated Post Title",
+  "content": "Updated content"
+}
+```
+
+**Note**: Users can only update their own posts.
+
+#### Delete Post
+```http
+DELETE /posts/:id
+Authorization: Bearer <your-jwt-token>
+```
+
+**Note**: Users can only delete their own posts.
+
+## Database Schema
+
+### Users Table
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR UNIQUE NOT NULL,
+  email VARCHAR UNIQUE NOT NULL,
+  password VARCHAR NOT NULL,
+  "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Posts Table
+```sql
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR NOT NULL,
+  content TEXT NOT NULL,
+  "authorId" INTEGER REFERENCES users(id),
+  "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## Error Responses
+
+The API uses consistent error response format:
+
+```json
+{
+  "statusCode": 400,
+  "message": "Username already exists",
+  "timestamp": "2025-01-03T17:30:00.000Z",
+  "path": "/auth/signup",
+  "method": "POST"
+}
+```
+
+Common HTTP status codes:
+- `200` - Success
+- `201` - Created
+- `400` - Bad Request (validation error)
+- `401` - Unauthorized (missing or invalid token)
+- `403` - Forbidden (insufficient permissions)
+- `404` - Not Found
+- `409` - Conflict (duplicate data)
+- `500` - Internal Server Error
+
+## Validation Rules
+
+### User Registration/Login
+- **username**: Minimum 4 characters, string
+- **email**: Valid email format
+- **password**: Minimum 6 characters, string
+
+### Posts
+- **title**: Required, non-empty string
+- **content**: Required, non-empty string
+
+## Testing
+
+Run the test suite:
+
+```bash
+# Unit tests
+npm test
+
+# Test coverage
+npm run test:cov
+
+# Watch mode
+npm run test:watch
+
+# E2E tests
+npm run test:e2e
+```
+
+## Project Structure
+
+```
+src/
+├── auth/                 # Authentication module
+│   ├── dto/             # Data Transfer Objects
+│   ├── auth.controller.ts
+│   ├── auth.service.ts
+│   ├── auth.module.ts
+│   ├── jwt.strategy.ts
+│   └── jwt-auth.guard.ts
+├── common/              # Shared utilities
+│   └── http-exception.filter.ts
+├── post/                # Posts module
+│   ├── dto/
+│   ├── post.controller.ts
+│   ├── post.service.ts
+│   ├── post.entity.ts
+│   └── post.module.ts
+├── user/                # Users module
+│   ├── user.service.ts
+│   ├── user.entity.ts
+│   └── user.module.ts
+├── app.module.ts        # Root module
+└── main.ts              # Application entry point
+```
+
+## Development Scripts
+
+```bash
+# Development mode with hot reload
+npm run start:dev
+
+# Build for production
+npm run build
+
+# Production mode
+npm run start:prod
+
+# Linting
+npm run lint
+
+# Format code
+npm run format
+```
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|  
+| `DATABASE_HOST` | PostgreSQL host | localhost |
+| `DATABASE_PORT` | PostgreSQL port | 5432 |
+| `DATABASE_USERNAME` | Database username | postgres |
+| `DATABASE_PASSWORD` | Database password | postgres |
+| `DATABASE_NAME` | Database name | postgres |
+| `JWT_SECRET` | JWT signing secret | Required |
+| `JWT_EXPIRES_IN` | JWT expiration time | 24h |
+| `PORT` | Application port | 3000 |
+
+## Security Features
+
+- **Password Hashing**: Passwords are hashed using bcrypt
+- **JWT Authentication**: Stateless authentication using JSON Web Tokens
+- **Input Validation**: All inputs are validated and sanitized
+- **SQL Injection Protection**: TypeORM provides protection against SQL injection
+- **CORS**: Configure CORS for cross-origin requests as needed
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License.
+
+## Support
+
+For support, email support@example.com or open an issue on GitHub.
